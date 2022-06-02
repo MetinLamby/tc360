@@ -28,48 +28,14 @@
                         </select>
                     </div>
 
-                    <!--
-                    <div class="kycd form-item">
-                            <div>Did you walk through a KYC process on the 360X platform?</div>
-                            <select v-model="userkycd" :disabled="isDisabledUserRegistered">
-                                <option disabled value="">Please select whether you completed a KYC process</option>
-                                <option>Yes</option>
-                                <option>No</option>
-                            </select>
-                        </div>
-                    -->
                     
                     <template v-if="this.userRegistered === 'Yes'">
-                        <div class="kycd form-item">
-                            <div>Did you walk through a KYC process on the 360X platform?</div>
-                            <select v-model="userkycd" :disabled="isDisabledUserRegistered">
-                                <option disabled value="">Please select whether you completed a KYC process</option>
-                                <option>Yes</option>
-                                <option>No</option>
-                            </select>
+                        <div class="email form-item">
+                            <div>Please provide the email adress you used to register on the 360x platform</div>
+                            <input v-model="userEmail" placeholder="Your 360x email" />
                         </div>
                     </template>
                     
-
-                    <template v-if="this.userkycd === 'Yes'">
-                        <div class="kycdType form-item">
-                            <div>Did you walk through a private or corporate KYC process?</div>
-                            <select v-model="userkycdType">
-                                <option disabled value="">Please select your KYC process type</option>
-                                <option disabled>private(KYC)</option>
-                                <option>corporate(BKYC)</option>
-                            </select>
-                        </div>
-
-                        <div class="issuer form-item">
-                            <div>Are you an issuer on the 360X platform?</div>
-                            <select v-model="issuer">
-                                <option disabled value="">Please select whether you are an issuer</option>
-                                <option>Yes</option>
-                                <option>No</option>
-                            </select>
-                        </div>
-                    </template>
                 </div>
 
 
@@ -92,9 +58,7 @@
             return {
                 residenceCountry: '',
                 userRegistered: '',
-                userkycd: '',
-                userkycdType: '',
-                issuer:'',
+                userEmail: ''
             }
         },
         computed: {
@@ -116,7 +80,7 @@
                 }
             },
             computePath() {
-                return '/country=' + this.residenceCountry + '/user=' + this.userRegistered + '/kyc=' + this.userkycd + '/kycType=' + this.userkycdType + '/issuer=' + this.issuer
+                return '/country=' + this.residenceCountry + '/user=' + this.userRegistered + '/email=' + this.userEmail
             },
         },
         methods: {
@@ -202,7 +166,7 @@
     margin-bottom: 30px;
 }
 
-select {
+select, input {
     width: 70%;
 }
 

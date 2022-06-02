@@ -46,6 +46,7 @@ keycloak.init({ onLoad: initOptions.onLoad }).success((auth) =>{
   Vue.$log.error("Authenticated Failed");
 });
 
+
 new Vue({
   router,
   render: h => h(App)
