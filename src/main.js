@@ -2,53 +2,67 @@ import Vue from 'vue'
 import App from './App.vue'
 import Keycloak from 'keycloak-js'
 import router from './router'
+import VueJwtDecode from 'vue-jwt-decode'
+import { store } from './store/store.js'
 
 Vue.config.productionTip = false
 
+// new Vue({
+//   router,
+//   render: h => h(App, { props: { keycloak: keycloak } })
+// }).$mount('#app')
+
+
+
 let initOptions = {
-  url: 'http://localhost:8080/', realm: 'myRealm', clientId: 'tc', onLoad:'login-required'
+  url: 'http://localhost:8080/', realm: 'tcrealm', clientId: 'tcrealm', onLoad:'login-required'
 }
 
 let keycloak = Keycloak(initOptions);
+Vue.prototype.$keycloak = keycloak;
 
-keycloak.init({ onLoad: initOptions.onLoad }).success((auth) =>{
-    
-    if(!auth) {
-      window.location.reload();
-    } else {
-      Vue.$log.info("Authenticated");
-    }
- 
+
+keycloak.init({ onLoad: initOptions.onLoad }).then((auth) => {
+  if (!auth) {
+    window.location.reload();
+  } else {
+    console.log("Authenticated");
+
     new Vue({
-      render: h => h(App),
+      router, store,
+      render: h => h(App, { props: { keycloak: keycloak } })
     }).$mount('#app')
-  
+  }
 
-    localStorage.setItem("vue-token", keycloak.token);
-    localStorage.setItem("vue-refresh-token", keycloak.refreshToken);
+  const decodedToken = VueJwtDecode.decode(keycloak.token)
+  console.log(decodedToken)
+  const roles = decodedToken.realm_access.roles
+  const email = decodedToken.email
 
-    setInterval(() =>{
-      keycloak.updateToken(70).success((refreshed)=>{
-        if (refreshed) {
-          Vue.$log.debug('Token refreshed'+ refreshed);
-        } else {
-          Vue.$log.warn('Token not refreshed, valid for '
+  store.commit("store_roles", roles)
+  store.commit("store_email", email)
+
+  console.log(roles)
+  console.log(email)
+
+
+
+//Token Refresh
+  setInterval(() => {
+    keycloak.updateToken(70).then((refreshed) => {
+      if (refreshed) {
+        console.log('Token refreshed' + refreshed);
+      } else {
+        console.log('Token not refreshed, valid for '
           + Math.round(keycloak.tokenParsed.exp + keycloak.timeSkew - new Date().getTime() / 1000) + ' seconds');
-        }
-      }).error(()=>{
-          Vue.$log.error('Failed to refresh token');
-      });
+      }
+    }).catch(() => {
+      console.log('Failed to refresh token');
+    });
+  }, 6000)
 
-
-    }, 60000)
-
-}).error(() =>{
-  Vue.$log.error("Authenticated Failed");
+}).catch(() => {
+  console.log("Authenticated Failed");
 });
 
-
-new Vue({
-  router,
-  render: h => h(App)
-}).$mount('#app')
 

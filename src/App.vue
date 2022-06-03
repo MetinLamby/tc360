@@ -2,11 +2,28 @@
   <div id="app">
     <nav>
       <router-link to="/">Home</router-link> |
-      <router-link to="/termsandconditionsform">Terms and Conditions</router-link>
+      <router-link to="/termsandconditionsform">Terms and Conditions</router-link> |
+      <router-link to="/realms/tcrealm/protocol/openid-connect/logout">Logout</router-link>
     </nav>
     <router-view/>
   </div>
 </template>
+
+<script>
+export default {
+  name: "App", 
+
+  data: () => ({
+    //
+  }),
+
+  methods: {
+    logout() {
+      this.$keycloak.logout()
+    }
+  }
+};
+</script>
 
 <style>
 #app {

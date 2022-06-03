@@ -32,7 +32,8 @@
                     <template v-if="this.userRegistered === 'Yes'">
                         <div class="email form-item">
                             <div>Please provide the email adress you used to register on the 360x platform</div>
-                            <input v-model="userEmail" placeholder="Your 360x email" />
+                            <input v-model="userEmail" placeholder="userEmail" />
+                            <!-- <v-bind>{{userEmail}}</v-bind> -->
                         </div>
                     </template>
                     
@@ -44,6 +45,9 @@
                         <a v-bind:href="computePath">
                             <button :disabled="disabledBtn" id="routerBtn" class="nav-link btn btn-ghost">Send Form</button>
                         </a>
+
+
+                        
                     </div>
                 </div>   
             </div>
@@ -58,7 +62,9 @@
             return {
                 residenceCountry: '',
                 userRegistered: '',
-                userEmail: ''
+                userBKYCd: '',
+                userIssuer: '',
+                userEmail: this.$store.state.userData.email
             }
         },
         computed: {
@@ -80,7 +86,7 @@
                 }
             },
             computePath() {
-                return '/country=' + this.residenceCountry + '/user=' + this.userRegistered + '/email=' + this.userEmail
+                return '/country=' + "Germany" + '/user=' + this.$store.state.userData.roles.includes("userregistered") + '/kyc=' + this.$store.state.userData.roles.includes("userbkyc") + '/issuer=' + this.$store.state.userData.roles.includes("userissuer")
             },
         },
         methods: {
@@ -92,6 +98,48 @@
                     routeBtn.classList.remove("btn-active");
                 }
                 return true;
+            },
+            // isUserRegistered: function() {
+            //     if (this.store.userData.state.roles.includes("userregistered")) {
+            //         this.userRegistered = "Yes"
+            //     } else  {
+            //         this.userRegistered = "No"
+            //     }
+            // },
+            // isUserBKYCd() {
+            //     if (this.store.userData.state.roles.includes("userbkyc")) {
+            //         this.userBKYCd = "Yes"
+            //     } else  {
+            //         this.userBKYCd = "No"
+            //     }
+            // },
+            // isUserIssuer() {
+            //     if (this.store.userData.state.roles.includes("userissuer")) {
+            //         this.userIssuer = "Yes"
+            //     } else  {
+            //         this.userIssuer = "No"
+            //     }
+            // },
+            isUserRegistered: function() {
+                if (this.$store.state.userData.roles.includes("userregistered")) {
+                    return "Yes"
+                } else  {
+                    return "No"
+                }
+            },
+            isUserBKYCd: function() {
+                if (this.$store.state.userData.roles.includes("userbkyc")) {
+                    return "Yes"
+                } else  {
+                    return "No"
+                }
+            },
+            isUserIssuer: function() {
+                if (this.$store.state.userData.roles.includes("userissuer")) {
+                    return "Yes"
+                } else  {
+                    return "No"
+                }
             },
         }
     }
