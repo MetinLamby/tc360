@@ -32,8 +32,7 @@
                     <template v-if="this.userRegistered === 'Yes'">
                         <div class="email form-item">
                             <div>Please provide the email adress you used to register on the 360x platform</div>
-                            <input v-model="userEmail" placeholder="userEmail" />
-                            <!-- <v-bind>{{userEmail}}</v-bind> -->
+                            <input v-model="userEmail" placeholder="userEmail" disabled/>
                         </div>
                     </template>
                     
@@ -43,11 +42,8 @@
                 <div class="termsAndConditionsBtn">
                     <div>
                         <a v-bind:href="computePath">
-                            <button :disabled="disabledBtn" id="routerBtn" class="nav-link btn btn-ghost">Send Form</button>
+                            <button :disabled="disabledBtn" id="routerBtn" class="nav-link btn btn-ghost">Register as a 360x User to see our Terms of Use</button>
                         </a>
-
-
-                        
                     </div>
                 </div>   
             </div>
@@ -71,13 +67,6 @@
             isDisabledResidence() {
                 return !this.residenceCountry.localeCompare('');
             },
-            isDisabledUserRegistered() {
-                if (!this.userRegistered.localeCompare('Yes')) {
-                    return false;
-                } else {
-                    return true;
-                }
-            },
             disabledBtn() {
                 if (this.userRegistered.localeCompare('Yes')) {
                     return true;
@@ -93,6 +82,7 @@
             addStyleForActiveBtn() {
                 const routeBtn = document.getElementById("routerBtn");
                 if (!this.userRegistered.localeCompare('Yes')) {
+                    routeBtn.innerHTML = "See 360X Terms of Use"
                     routeBtn.classList.add("btn-active");
                 } else if (!this.userRegistered.localeCompare('No') || !this.userRegistered.localeCompare('')) {
                     routeBtn.classList.remove("btn-active");
