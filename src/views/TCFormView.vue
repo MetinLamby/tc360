@@ -4,48 +4,84 @@
             <div>
                 <div class="termsAndConditionsText">
                     <h1 class="headerText">Terms & Conditions and Customer Information</h1>
+                </div>
+                <div id="showInputForm">
                     <p class="bodyText">To help us guide you to the right information, please help us identify which type of user you are by selecting the correct options from the below dropdown menu</p>
-                </div>
-                <div class="termsAndConditionsInputForm">
-                    <p class="formHeader">Please select from the dropdowns</p>
+                    <div class="termsAndConditionsInputForm">
+                        <p class="formHeader">Please select from the dropdowns</p>
 
-
-                    <div class="countryOfResidence form-item">
-                        <div>What is your country of residence?</div>
-                        <select v-model="residenceCountry">
-                            <option disabled value="">Please Select your Country</option>
-                            <option>Germany</option>
-                        </select>
-                    </div>
-
-
-                    <div class="userRegistration form-item">
-                        <div>Are you registered as a user on the 360X platform?</div>
-                        <select v-model="userRegistered"  @change="addStyleForActiveBtn()" :disabled="isDisabledResidence">
-                            <option disabled value="">Please select whether you are registered as a user</option>
-                            <option>Yes</option>
-                            <option>No</option>
-                        </select>
-                    </div>
-
-                    
-                    <template v-if="this.userRegistered === 'Yes'">
-                        <div class="email form-item">
-                            <div>Please provide the email adress you used to register on the 360x platform</div>
-                            <input v-model="userEmail" placeholder="userEmail" disabled/>
+                        <div class="countryOfResidence form-item">
+                            <div>What is your country of residence?</div>
+                            <select v-model="residenceCountry">
+                                <option disabled value="">Please Select your Country</option>
+                                <option>Germany</option>
+                            </select>
                         </div>
-                    </template>
-                    
+
+                        <div class="userRegistration form-item">
+                            <div>Are you registered as a user on the 360X platform?</div>
+                            <select v-model="userRegistered"  @change="addStyleForActiveBtn()" :disabled="isDisabledResidence">
+                                <option disabled value="">Please select whether you are registered as a user</option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                        </div>
+                        
+                        <template v-if="this.userRegistered === 'Yes'">
+                            <div class="email form-item">
+                                <div>Please provide the email adress you used to register on the 360x platform</div>
+                                <input v-model="userEmail" placeholder="userEmail" disabled/>
+                            </div>
+                        </template>
+                        
+                    </div>
+
+                    <div class="termsAndConditionsBtn">
+                        <div>
+                            <!-- <a v-bind:href="computePath"> -->
+                            <a>
+                                <button :disabled="disabledBtn" id="routerBtn" class="nav-link btn btn-ghost" @click="showTerms()">Register as a 360x User to see our Terms of Use</button>
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
-
-                <div class="termsAndConditionsBtn">
-                    <div>
-                        <a v-bind:href="computePath">
-                            <button :disabled="disabledBtn" id="routerBtn" class="nav-link btn btn-ghost">Register as a 360x User to see our Terms of Use</button>
-                        </a>
+                <div class="termsofuselist">
+                    <div id="regKycIssuer">
+                        <div>
+                            <h1 class="headerTermPage"><u>German Resident</u> and <u>Registered User</u> and <u>BKYC</u> and <u>Issuer</u></h1>
+                            <ul class="listOfTerms">
+                                <li>General Terms</li>
+                                <li>Privacy Policy</li>
+                                <li>Exchange Platform Terms</li>
+                                <li>Technical Specification and IT security</li>
+                                <li>Registration and functionality</li>
+                                <li>Instrument Admission</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>   
+                    <div id="regKyc">
+                        <div>
+                            <h1 class="headerTermPage"><u>German Resident</u> and <u>Registered User</u> and <u>BKYC</u></h1>
+                            <ul class="listOfTerms">
+                                <li>General Terms</li>
+                                <li>Privacy Policy</li>
+                                <li>Exchange Platform Terms</li>
+                                <li>Technical Specification and IT security</li>
+                                <li>Registration and functionality</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="reg">
+                        <div>
+                            <h1 class="headerTermPage"><u>German Resident</u> and <u>Registered User</u></h1>
+                            <ul class="listOfTerms">
+                                <li>General Terms</li>
+                                <li>Privacy Policy</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -86,8 +122,26 @@
                     routeBtn.classList.add("btn-active");
                 } else if (!this.userRegistered.localeCompare('No') || !this.userRegistered.localeCompare('')) {
                     routeBtn.classList.remove("btn-active");
+                    routeBtn.innerHTML = "Register as a 360x User to see our Terms of Use"
                 }
                 return true;
+            },
+            showTerms() {
+                // hide the form
+                const inputForm = document.getElementById("showInputForm");
+                const tcRegisteredKycIssuer = document.getElementById("regKycIssuer");
+                const tcRegisteredKyc = document.getElementById("regKyc");
+                const tcRegistered = document.getElementById("reg");
+                inputForm.style.display = 'none';
+                // show the terms of use
+                if (this.$store.state.userData.roles.includes("userregistered") && this.$store.state.userData.roles.includes("userbkyc") && this.$store.state.userData.roles.includes("userissuer")) {
+                    tcRegisteredKycIssuer.style.display = 'flex';
+                } else if (this.$store.state.userData.roles.includes("userregistered") && this.$store.state.userData.roles.includes("userbkyc")) {
+                    tcRegisteredKyc.style.display = 'flex';
+                } else if (this.$store.state.userData.roles.includes("userregistered")) {
+                    tcRegistered.style.display = 'flex';
+                }
+                console.log("tester")
             },
             // isUserRegistered: function() {
             //     if (this.store.userData.state.roles.includes("userregistered")) {
@@ -210,6 +264,28 @@ select, input {
 
 button {
     border: none;
+}
+
+.listOfTerms {
+    text-align: left;
+}
+
+#regKycIssuer {
+    display: none;
+}
+
+#regKyc {
+    display: none;
+}
+
+#reg {
+    display: none;
+}
+
+.termsofuselist {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 </style>

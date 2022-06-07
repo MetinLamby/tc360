@@ -42,6 +42,7 @@ keycloak.init({ onLoad: initOptions.onLoad }).then((auth) => {
   store.commit("store_roles", roles)
   store.commit("store_email", email)
 
+
   console.log(roles)
   console.log(email)
 
